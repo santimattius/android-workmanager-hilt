@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "android-startup"
+rootProject.name = "android-workmanager-hilt"
 include(":app")
