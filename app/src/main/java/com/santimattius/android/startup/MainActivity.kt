@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -20,7 +21,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.santimattius.android.startup.service.CrashTrackerService
+import com.santimattius.android.startup.service.TaskRepository
 import com.santimattius.android.startup.ui.theme.AndroidStartupTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -30,6 +33,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var crashTrackerService: CrashTrackerService
+
+    @Inject
+    lateinit var taskRepository: TaskRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +47,10 @@ class MainActivity : ComponentActivity() {
                 ) {
                     Greeting(
                         title = "Android Startup with Hilt",
-                        description = "Service initialized: ${crashTrackerService.isInitialized}"
+                        description = "Service initialized: ${crashTrackerService.isInitialized}",
+                        onExecuteTask = {
+                            taskRepository.runPeriodicWork()
+                        }
                     )
                 }
             }
@@ -54,6 +63,7 @@ class MainActivity : ComponentActivity() {
 fun Greeting(
     title: String,
     description: String,
+    onExecuteTask: () -> Unit = {},
 ) {
 
     val containerColor: Color = MaterialTheme.colorScheme.primary
@@ -89,6 +99,19 @@ fun Greeting(
                     text = description,
                     style = MaterialTheme.typography.bodyMedium
                 )
+                Button(
+                    modifier = Modifier.padding(top = 10.dp),
+                    onClick = onExecuteTask
+                ) {
+                    Text(text = "Execute Onetime Work")
+                }
+
+                Button(
+                    modifier = Modifier.padding(top = 4.dp),
+                    onClick = onExecuteTask
+                ) {
+                    Text(text = "Execute Periodic Work")
+                }
             }
         }
     }

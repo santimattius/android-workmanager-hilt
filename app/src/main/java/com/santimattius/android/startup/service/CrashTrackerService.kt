@@ -1,5 +1,7 @@
 package com.santimattius.android.startup.service
 
+import android.util.Log
+
 class CrashTrackerService {
 
     var isInitialized: Boolean = false
@@ -7,5 +9,9 @@ class CrashTrackerService {
 
     fun initialize() {
         isInitialized = true
+    }
+
+    fun log(tag: String?, data: String) {
+        Log.i(tag, data)
     }
 }
